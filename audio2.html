@@ -1,0 +1,69 @@
+<html>
+<head>
+  <script type="application/javascript;version=1.7"></script> <!-- Use js v 1.7 -->
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  <!-- Other Third Party Libraries -->
+  <script src="modernizr.custom.68208.js"></script>
+  <!-- Copied http://cdn.binaryjs.com/0.2.1/binary.min.js into directory b/c they don't have an https cdn version -->
+  <script src="binary.min.js"></script>
+  <!-- My Files -->
+  <script src="audio2.js"></script>
+  <link rel="stylesheet" src="audio_demo.css">
+  <style type="text/css">
+
+    .mispro {
+      color: red;
+    }
+    .dynamic2 {
+      
+      background: white;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .other {
+      background: linear-gradient(330deg, #e05252 0%, #99e052 25%, #52e0e0 50%, #9952e0 75%, #e05252 100%);
+      background: -webkit-gradient(
+        linear, 
+        left top, 
+        left bottom, 
+        color-stop(0.53, rgb(14, 145, 19)), 
+        color-stop(1, rgb(170, 227, 172))
+      );
+  
+
+      background: -webkit-linear-gradient(green, white); /* For Safari 5.1 to 6.0 */
+      background: -o-linear-gradient(green, white); /* For Opera 11.1 to 12.0 */
+      background: -moz-linear-gradient(green, white); /* For Firefox 3.6 to 15 */
+      background: linear-gradient(green, white); /* Standard syntax */
+    }
+
+  </style>
+
+</head>
+
+<body>
+  <div class="container-fluid">
+    <h1>Audio Recording Demo 2</h1>
+    <br>
+	<p id="readable-content" class="lead">
+
+
+    </p>
+    <button type="button" class="btn btn-primary btn-lg" id="rec-btn">
+		<i class="fa fa-microphone fa-2x dynamic" id="mic-icon"></i>
+		Record next fragment
+	</button> 
+  <br>
+  
+  </div> <!-- Container fluid -->
+
+</body>
+
+</html>
