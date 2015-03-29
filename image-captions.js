@@ -413,7 +413,7 @@ $(function() {
 				    $('#submit-button').removeClass('disabled');
 				    $('#submit-button').addClass('active');
 				}
-			        
+			  
 				// stop recording
 				console.log("Disconnecting recorder ", recorder);
 				recorder.disconnect();
@@ -455,17 +455,25 @@ $(function() {
 	        return code;
 	}
 
+        // Finished recording, submitting Audio
         $('#submit-button').click(function(){
 	        var confirmation = generateConfirmation();
 	        var message = "Thank you for your submission! \n " + confirmation;
-	        alert(message);;
+	        alert(message);
+	        
+                // Update text file to remove id/key from dict
+	        
 	});
 
         // GETTING IDS
-        $.get('captions/image_ids.txt', function(data) {
+        $.get('captions/IDtoKeyDict.txt', function(data) {
+	        // gets first id in dictionary
 	        var ids = data.split('\n');
-	        var random_id = ids[Math.floor(Math.random() * ids.length)];
-                var xml_path = 'captions/xml/' + random_id + '.xml';
+	        var cur = ids[0].split(' ');
+	        var id = cur[0];
+		var key = cur[1];
+	        // var random_id = ids[Math.floor(Math.random() * ids.length)];
+                var xml_path = 'captions/xml/' + id + '.xml';
 	        getXML(xml_path);
 	}, 'text');
         
