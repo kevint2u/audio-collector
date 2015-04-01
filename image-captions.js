@@ -371,7 +371,10 @@ $(function() {
 		};
 
 		var updateFragmentVars = function () {
-			currentFragment = Math.max(recordBtn.data("fragment") + 1, currentFragment);
+		        console.log(recordBtn);
+		        console.log(recordBtn.getAttribute('data-fragment'));
+		        // currentFragment = Math.max(recordBtn.getAttribute('data-fragment') + 1, currentFragment);
+		        currentFragment = Math.max(recordBtn.data("fragment") + 1, currentFragment);
 			console.log("Updating Fragment: currentFragment ", currentFragment);
 		}
 
@@ -438,8 +441,14 @@ $(function() {
 });
 
 $(function() {
+        // Create alert to remind user to click "allow" for microphone access.
+        var alert_prompt = 'Please be sure to click "Allow" to give the browser the ability to use your microphone. You will have to hit "Allow" five times.';
+        alert(alert_prompt);
 
-        // CONFIRMATION CODE
+        // variable to hold the id/key code that is used for Turk Verification
+        var id_key_code = "";
+
+        // GENERATE CONFIRMATION CODE
         var generateConfirmation = function(){
     	        var code = "";
     	        var letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -459,21 +468,28 @@ $(function() {
         $('#submit-button').click(function(){
 	        var confirmation = generateConfirmation();
 	        var message = "Thank you for your submission! \n " + confirmation;
-	        alert(message);
-	        
-                // Update text file to remove id/key from dict
-	        
+	        window.prompt("Copy to clipboard and submit in Mechanical Turkv: Ctrl+C, Enter", id_key_code.toUpperCase());
 	});
 
         // GETTING IDS
         $.get('captions/IDtoKeyDict.txt', function(data) {
-	        // gets first id in dictionary
+	        // gets id from URL parameter
+	        var cur_id = location.search.split('?')[1]
 	        var ids = data.split('\n');
-	        var cur = ids[0].split(' ');
-	        var id = cur[0];
-		var key = cur[1];
+	        var index = 0;
+	        var key = '';
+	        for (i = 0; i < ids.length; i++) {
+		    cur = ids[i].split(' ');
+		    if(cur[0] = cur_id){
+			index = i;
+			key = cur[1];
+			break
+		    }
+		}
+	        id_key_code = cur_id + key;
+
 	        // var random_id = ids[Math.floor(Math.random() * ids.length)];
-                var xml_path = 'captions/xml/' + id + '.xml';
+                var xml_path = 'captions/xml/' + cur_id + '.xml';
 	        getXML(xml_path);
 	}, 'text');
         
