@@ -29,14 +29,14 @@ for (var dev in ifaces) {
 
 var DEFAULT_SAMPLE_RATE = 16 * 1000;  // 16 kHz
 // %d is for the recording timestamp
-var RECORDINGS_DIRECTORY_FORMAT = '/usr/users/kevintu/recordings/%d';
+var RECORDINGS_DIRECTORY_FORMAT = '/data/sls/scratch/kevintu/recordings/%d';
 
 // %d is for a number unique to each utterance within the same session
 var RAW_FILE_NAME_FORMAT = '%s/utterance_%d.raw';
 var WAV_FILE_NAME_FORMAT = '%s/utterance_%d.wav';
 var TXT_FILE_NAME_FORMAT = '%s/utterance_%d.txt';
 
-var DATA_DIRECTORY_FORMAT = '/usr/users/kevintu/sound_data/%d';
+var DATA_DIRECTORY_FORMAT = '/data/sls/scratch/kevintu/sound_data/%d';
 var TIMINGS_DIRECTORY_FORMAT = '%s/time';
 var MISPRO_DIRECTORY_FORMAT = '%s/misp';
 // first and second %d are speaker, which is timestamp
@@ -314,6 +314,7 @@ server.on('connection', function (client) {
 			var start_index =  meta.start_index;
 			var end_utterance = meta.end_fragment;
 			var end_index = meta.end_index;
+		        console.log('TIMING DATA... ', timing_data);
 			var startWordBoundary = timing_data[start_utterance][start_index];
 			var endWordBoundary = timing_data[end_utterance][end_index];
 			console.log("startWordBoundary: ", startWordBoundary);

@@ -370,13 +370,13 @@ $(function() {
 			);
 		};
 
-		var updateFragmentVars = function () {
+		/* var updateFragmentVars = function () {
 		        console.log(recordBtn);
 		        console.log(recordBtn.getAttribute('data-fragment'));
 		        // currentFragment = Math.max(recordBtn.getAttribute('data-fragment') + 1, currentFragment);
 		        currentFragment = Math.max(recordBtn.data("fragment") + 1, currentFragment);
 			console.log("Updating Fragment: currentFragment ", currentFragment);
-		}
+		} */
 
 		var disableAllExcept = function (exceptBtn) {
 			$(".record-btn").attr("disabled", true);
@@ -423,7 +423,7 @@ $(function() {
 				teardownStream();
 				recording = false;
 				resetButtons(recordBtn);
-				updateFragmentVars();
+				// updateFragmentVars();
 				return;
 			}
 			// start recording
@@ -517,6 +517,7 @@ $(function() {
 	}
 
 	var gen_wordButtonListener = function (btn, frag, ind) {
+	        console.log('gen_wordButtonListener', btn);
 		return function requestPlayback (e) {
 			if (btn.data("enabled")) {
 				var metadata = {
@@ -585,17 +586,17 @@ $(function() {
 			console.log("building panel");
 			var panelElement = $('<div class="panel panel-default"><div class="panel-body"><div class="row"><div class="col-lg-4 col-md-5 col-sm-6 content-buttons-container glyph">' + 
 				'<div class="content-buttons btn-group-lg invisible" role="group" aria-label="...">' + 
-				'<button type="button" class="btn btn-primary record-btn"><i class="fa fa-dot-circle-o"></i> Record</button>' + 
-				'	<button type="button" class="btn btn-success play-btn"><i class="fa fa-play"></i> Play</button>' + 
+				'<button type="button" class="btn btn-primary record-btn"><i class="fa fa-dot-circle-o"></i> Record</button>' +  
 				'</div></div>' + 
 				'<div class="col-lg-8 col-md-7 col-sm-6 content-container"></div>' + 
 				'</div></div></div>');
+		        // '       <button type="button" class="btn btn-success play-btn"><i class="fa fa-play"></i> Play</button>' +
 			panelElement.find('.content-container').append(lineElement);
 			panelElement.find('.record-btn').attr('data-fragment', i).data("isEnabled", (i===0));
 		        panelElement.find('.record-btn').addClass('unfinished');
 			panelElement.find('.play-btn')
 				.attr('data-fragment', i)
-				.attr("disabled", true)
+				.attr("disabled", false)
 				.click(gen_playButtonListener(i, phrases.length-1));
 			panelElement.data('isCurrent', false);
 			storyElement.append(panelElement);
