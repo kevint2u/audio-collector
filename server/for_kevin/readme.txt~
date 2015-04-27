@@ -1,0 +1,5 @@
+Try running this script:
+./align_si_one_utt.sh utterance_4.wav utterance_4.txt ./output.txt
+
+To view the usage of the verification script, try running it with no arguments:
+./align_si_one_utt.sh
