@@ -59,6 +59,7 @@ var logAll = function (error, stdout, stderr) {
 };
 
 var recognizeUtterances = function (utteranceWavFile, utteranceTxtFile, dataOutputDir, callback) {
+	console.log("\n\nRECOGNIZE UTTERANCES");
 	console.log("Running recognition on ", utteranceWavFile, utteranceTxtFile, "\nOutput data to", dataOutputDir);
 	var command = ['./call_script.sh', utteranceWavFile, utteranceTxtFile, dataOutputDir].join(' ');
 	var child = exec(command,
@@ -70,6 +71,10 @@ var recognizeUtterances = function (utteranceWavFile, utteranceTxtFile, dataOutp
 			}
 			callback();
 		});
+};
+
+var checkUtterance = function(stream_id) {
+	console.log("\n\nCHECKING UTTERANCE: %s", stream_id);
 };
 
 var analyzeUtterances = function (dataOutputDir, clientCallback) {
@@ -154,7 +159,6 @@ var getAlignmentResults = function (results_dir, stream_id, timing_data, callbac
 		readStream.on('end', gen_callCallback(utterance_id));
 	}
 };
-
 
 var gen_throughWordBoundaries = function () {
 	var currentWord = null;
@@ -298,6 +302,7 @@ server.on('connection', function (client) {
 	var recordings_dir = util.format(RECORDINGS_DIRECTORY_FORMAT, timestamp);
 	fs.mkdirSync(recordings_dir);
 	var data_output_dir = util.format(DATA_DIRECTORY_FORMAT, timestamp);
+	var utt_output_file = data_output_dir + "/output.txt";
 	var timings_dir = util.format(TIMINGS_DIRECTORY_FORMAT, data_output_dir);
 	console.log("Utterances from this session being saved in " + recordings_dir);
 	var timing_data = {};
@@ -384,9 +389,10 @@ server.on('connection', function (client) {
 			console.log(util.format("Stream %d ended.", stream_id));
 			console.log("Raw audio: " + rawFileName);
 			convertFileSox(rawFileName, wavFileName);
-			// recognizeUtterances(wavFileName, txtFileName, data_output_dir, function () {
+			recognizeUtterances(wavFileName, txtFileName, utt_output_file, function () {
+				checkUtterance(stream_id);
 				// getAlignmentResults(timings_dir, stream_id, timing_data, alignment_callback);
-			// });
+			});
 		});
 
 		stream.on('close', function() {

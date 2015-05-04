@@ -9,7 +9,7 @@ output_dir=$3
 echo "Utterance wav: $utterance_wav Utterance text: $utterance_txt Output dir: $output_dir"
 
 # cd ./for_trish
-cd /usr/users/annlee/for_trish 
-./run_single_utt.sh $utterance_wav $utterance_txt $output_dir
+cd /usr/users/kevintu/audio-collector/server/for_kevin
+./align_si_one_utt.sh $utterance_wav $utterance_txt $output_dir
 
 # timing results in output_dir/time/utterance_id.txt
