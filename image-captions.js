@@ -491,6 +491,11 @@ $(function() {
 	        // var random_id = ids[Math.floor(Math.random() * ids.length)];
                 var xml_path = 'captions/xml/' + cur_id + '.xml';
 	        getXML(xml_path);
+
+		// update image
+		var img_src = "images/" + cur_id + ".jpg";
+		$('#cur_img').attr("src",img_src);
+	        
 	}, 'text');
         
         // SET UP PAGE
