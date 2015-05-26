@@ -73,8 +73,22 @@ var recognizeUtterances = function (utteranceWavFile, utteranceTxtFile, dataOutp
 		});
 };
 
-var checkUtterance = function(stream_id) {
-	console.log("\n\nCHECKING UTTERANCE: %s", stream_id);
+var checkUtterance = function(output_file) {
+	console.log("\n\nCHECKING UTTERANCE");
+        console.log("Looking for output in " + output_file);
+        var output = '';
+        fs = require('fs');
+        fs.readFile(output_file, 'utf8', function (err,data) {
+	        if (err) {
+		        return console.log(err);
+             	}
+	        output = data;
+	        if(output == 0) {
+		        //alert("Invalid input. Please record the phrase again.");
+		        
+		}
+	        console.log("Success: %s", output);
+	});
 };
 
 var analyzeUtterances = function (dataOutputDir, clientCallback) {
@@ -302,7 +316,6 @@ server.on('connection', function (client) {
 	var recordings_dir = util.format(RECORDINGS_DIRECTORY_FORMAT, timestamp);
 	fs.mkdirSync(recordings_dir);
 	var data_output_dir = util.format(DATA_DIRECTORY_FORMAT, timestamp);
-	var utt_output_file = data_output_dir + "/output.txt";
 	var timings_dir = util.format(TIMINGS_DIRECTORY_FORMAT, data_output_dir);
 	console.log("Utterances from this session being saved in " + recordings_dir);
 	var timing_data = {};
@@ -364,9 +377,11 @@ server.on('connection', function (client) {
 		var rawFileName = util.format(RAW_FILE_NAME_FORMAT, recordings_dir, stream_id);
 		var wavFileName = util.format(WAV_FILE_NAME_FORMAT, recordings_dir, stream_id);
 		var txtFileName = util.format(TXT_FILE_NAME_FORMAT, recordings_dir, stream_id);
+	        var output_utt = recordings_dir + "/output_" + stream_id + ".txt";
 
 		console.log("Saving raw audio to file " + rawFileName);
 		console.log("Saving converted wav audio to file " + wavFileName);
+	        console.log("Saving output of recognizer to file " + output_utt);
 
 		var rawFileWriter = fs.createWriteStream(rawFileName, {encoding: 'binary'});
 		// text file must end in newline
@@ -389,8 +404,8 @@ server.on('connection', function (client) {
 			console.log(util.format("Stream %d ended.", stream_id));
 			console.log("Raw audio: " + rawFileName);
 			convertFileSox(rawFileName, wavFileName);
-			recognizeUtterances(wavFileName, txtFileName, utt_output_file, function () {
-				checkUtterance(stream_id);
+			recognizeUtterances(wavFileName, txtFileName, output_utt, function () {
+				checkUtterance(output_utt);
 				// getAlignmentResults(timings_dir, stream_id, timing_data, alignment_callback);
 			});
 		});
