@@ -73,7 +73,7 @@ var recognizeUtterances = function (utteranceWavFile, utteranceTxtFile, dataOutp
 		});
 };
 
-var checkUtterance = function(output_file) {
+var checkUtterance = function(output_file, callback) {
 	console.log("\n\nCHECKING UTTERANCE");
         console.log("Looking for output in " + output_file);
         var output = '';
@@ -84,10 +84,11 @@ var checkUtterance = function(output_file) {
              	}
 	        output = data;
 	        if(output == 0) {
-		        //alert("Invalid input. Please record the phrase again.");
+		        // alert("Invalid input. Please record the phrase again.");
 		        
 		}
-	        console.log("Success: %s", output);
+	        // console.log("Success: %s", output);
+	        callback(output);
 	});
 };
 
@@ -405,7 +406,19 @@ server.on('connection', function (client) {
 			console.log("Raw audio: " + rawFileName);
 			convertFileSox(rawFileName, wavFileName);
 			recognizeUtterances(wavFileName, txtFileName, output_utt, function () {
-				checkUtterance(output_utt);
+				validResult = checkUtterance(output_utt, function(output) {
+				        console.log("Utterance result: %s", output);
+				        output = Number(output.replace('\n',''));
+				        if(output == 1) { 
+					        console.log("Valid recording");
+					}
+				        else {
+					        console.log("Invalid recording");
+					}
+				        // parameters: [indicator, validResult, phraseNumber]
+				        var streamOutput = ["utterance",output, stream_id+1]; 
+				        stream.write(streamOutput);
+				});
 				// getAlignmentResults(timings_dir, stream_id, timing_data, alignment_callback);
 			});
 		});
