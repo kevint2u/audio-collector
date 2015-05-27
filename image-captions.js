@@ -11,8 +11,8 @@ Old:
 WAMI https://code.google.com/p/wami-recorder/
 
 user selected text range: http://www.quirksmode.org/dom/range_intro.html
-
-*/
+ 
+*/ 
 $(function() {
 	console.log("Initializing cross-browser audio capabilities");
 	window.AudioContext = Modernizr.prefixed('AudioContext', window);
@@ -284,6 +284,18 @@ $(function() {
 
 				binStream.on('data', function(data) {
 					console.log("Client stream received data: ", data);
+					if (data[0] == "utterance" && data[1] == 0){
+						var phrases = document.getElementsByClassName("panel-body");
+						var curObj = phrases[data[2]-1];
+						curObj.style.backgroundColor = "tomato";
+						alert("Recording was invalid. Please speak clearly and re-record the phrase.");
+					}
+					if (data[0] == "utterance" && data[1] == 1){
+						var phrases = document.getElementsByClassName("panel-body");
+						var curObj = phrases[data[2]-1];
+						curObj.style.backgroundColor = "lightgreen";
+					}
+
 				});
 
 				binStream.on('end', function () {
@@ -405,17 +417,17 @@ $(function() {
 			        console.log(e);
 			        // keep track of how many remaining captions are left
 			        if (hasClass(recordBtn,'unfinished')) {
-				    recordBtn.className = recordBtn.className.replace(' unfinished', '');
-				}
+				    	recordBtn.className = recordBtn.className.replace(' unfinished', '');
+					}
 			        var remaining = $('.unfinished').length;
 			        console.log('remaining unfinished', remaining);
 
 			        // enable finished button if captions complete
 			        if (remaining == 0) {
-				    console.log('Finished all captions!');
-				    $('#submit-button').removeClass('disabled');
-				    $('#submit-button').addClass('active');
-				}
+						console.log('Finished all captions!');
+		    			$('#submit-button').removeClass('disabled');
+		    			$('#submit-button').addClass('active');
+					}
 			  
 				// stop recording
 				console.log("Disconnecting recorder ", recorder);
@@ -441,9 +453,6 @@ $(function() {
 });
 
 $(function() {
-        // Create alert to remind user to click "allow" for microphone access.
-        var alert_prompt = 'Please be sure to click "Allow" to give the browser the ability to use your microphone. You will have to hit "Allow" five times.';
-        alert(alert_prompt);
 
         // variable to hold the id/key code that is used for Turk Verification
         var id_key_code = "";
@@ -466,10 +475,24 @@ $(function() {
 
         // Finished recording, submitting Audio
         $('#submit-button').click(function(){
-	        var confirmation = generateConfirmation();
-	        var message = "Thank you for your submission! \n " + confirmation;
-	        window.prompt("Copy to clipboard and submit in Mechanical Turkv: Ctrl+C, Enter", id_key_code.toUpperCase());
-	});
+			var phrases = document.getElementsByClassName("panel-body");
+			var counter = 0;
+        	for (var i = 0; i < phrases.length; ++i) {
+		    	var item = phrases[i];  
+		    	if (item.style.backgroundColor == "rgb(255, 99, 71)") {
+		    		counter += 1;
+		    	}
+			}  
+			console.log("incorrect: %s", counter);
+			if (counter == 0) {
+		        var confirmation = generateConfirmation();
+		        var message = "Thank you for your submission! \n " + confirmation;
+		        window.prompt("Copy to clipboard and submit in Mechanical Turkv: Ctrl+C, Enter", id_key_code.toUpperCase());
+		    }
+		    else {
+		    	alert("Please re-record all incorrectly marked phrases.");
+		    }
+		});
 
         // GETTING IDS
         $.get('captions/IDtoKeyDict.txt', function(data) {
@@ -485,19 +508,24 @@ $(function() {
 			key = cur[1];
 			break
 		    }
-		}
+		} 
 	        id_key_code = cur_id + key;
 
 	        // var random_id = ids[Math.floor(Math.random() * ids.length)];
                 var xml_path = 'captions/xml/' + cur_id + '.xml';
 	        getXML(xml_path);
 
-		// update image
-		var img_src = "images/" + cur_id + ".jpg";
-		$('#cur_img').attr("src",img_src);
-	        
-	}, 'text');
-        
+	        // update image
+	        var img_src = "images/" + cur_id + ".jpg";
+	        $('#cur_img').attr("src",img_src);
+
+	        // Create alert to remind user to click "allow" for microphone access.
+        	var alert_prompt = 'Please be sure to click "Allow" to give the browser the ability to use your microphone. You will have to hit "Allow" five times.';
+        	alert(alert_prompt);
+
+		}, 'text');
+		
+
         // SET UP PAGE
 	console.log("Trying to read in XML file");
         var getXML = function(xml_path){
@@ -552,7 +580,7 @@ $(function() {
 			console.log("Clicked playback button: ", metadata);
 			client.createStream(metadata);
 		};
-	}
+	} 
 
 	var prepareReadableDisplay = function (readable) {
 		// expects readable {title: 't', content: ['c', 'o']}
@@ -589,7 +617,7 @@ $(function() {
 				lineElement.append(" ");
 			}
 			console.log("building panel");
-			var panelElement = $('<div class="panel panel-default"><div class="panel-body"><div class="row"><div class="col-lg-4 col-md-5 col-sm-6 content-buttons-container glyph">' + 
+			var panelElement = $('<div class="panel panel-default"><div class="panel-body" style="background-color:#fff"><div class="row"><div class="col-lg-4 col-md-5 col-sm-6 content-buttons-container glyph">' + 
 				'<div class="content-buttons btn-group-lg invisible" role="group" aria-label="...">' + 
 				'<button type="button" class="btn btn-primary record-btn"><i class="fa fa-dot-circle-o"></i> Record</button>' +  
 				'</div></div>' + 
